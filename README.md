@@ -1,7 +1,9 @@
 # 🛒 Customer Churn Prediction & Segmentation for Retention Strategy
 
 **Author:** Nguyen Viet Trung Kien
+
 **Date:** March 2026
+
 **Tools Used:** Python, Pandas, NumPy, Scikit-Learn, Random Forest, XGBoost, PCA, K-Means, Hierarchical Clustering
 
 ---
