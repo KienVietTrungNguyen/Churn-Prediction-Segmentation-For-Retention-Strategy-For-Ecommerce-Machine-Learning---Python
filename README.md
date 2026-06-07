@@ -1,89 +1,22 @@
-# 🛒 Customer Churn Prediction & Segmentation for Retention Strategy
+# ❓ Question 1: What factors contribute to customer churn?
 
-**Author:** Nguyen Viet Trung Kien
-**Date:** March 2026
-**Tools:** Python, Pandas, NumPy, Scikit-Learn, Random Forest, XGBoost, PCA, K-Means, Matplotlib, Seaborn
+## 🎯 Objective
 
----
+The first objective is to understand the characteristics and behaviors of churned customers and identify the key factors that contribute to customer churn.
 
-# 📌 Project Overview
-
-Customer churn is one of the most critical challenges in e-commerce because losing existing customers directly impacts revenue, profitability, and Customer Lifetime Value (CLV).
-
-The objective of this project is to identify the main drivers of churn, build a predictive model to identify at-risk customers, and explore customer segmentation techniques to support targeted retention campaigns.
+Understanding these factors helps the business design more effective retention strategies and intervene before customers leave.
 
 ---
 
-# 🎯 Business Problem
+## 🔍 Analysis Approach
 
-An e-commerce company observed that a significant number of customers stop purchasing after a short period of time.
+To answer this question:
 
-The business wants to answer the following questions:
+### Step 1: Perform Data Cleaning
 
-### 1. Customer Behavior Analysis
-
-* What characteristics are commonly found among churned customers?
-* Which factors contribute most to customer churn?
-
-### 2. Churn Prediction
-
-* Can machine learning accurately predict customers who are likely to churn?
-
-### 3. Customer Segmentation
-
-* Can churned customers be grouped into meaningful segments for personalized retention campaigns?
-
----
-
-# 📂 Dataset
-
-The dataset contains customer demographic information, purchasing behavior, engagement metrics, and service-related attributes.
-
-| Metric          | Value |
-| --------------- | ----- |
-| Records         | 5,630 |
-| Features        | 20    |
-| Target Variable | Churn |
-| Format          | XLSX  |
-
-### Target Variable
-
-| Value | Meaning           |
-| ----- | ----------------- |
-| 1     | Customer Churned  |
-| 0     | Customer Retained |
-
----
-
-# 🧱 Project Workflow
-
-```text
-Data Cleaning
-      ↓
-Exploratory Data Analysis
-      ↓
-Feature Engineering
-      ↓
-Model Training
-      ↓
-Hyperparameter Tuning
-      ↓
-Model Evaluation
-      ↓
-Feature Importance
-      ↓
-Customer Segmentation
-      ↓
-Business Recommendation
-```
-
----
-
-# 🔧 Data Preprocessing
-
-## Missing Value Treatment
-
-Several columns contained missing values.
+* Handle missing values
+* Check duplicate records
+* Standardize categorical values
 
 ```python
 cols_missing = [
@@ -100,28 +33,144 @@ for col in cols_missing:
     df[col].fillna(df[col].median(), inplace=True)
 ```
 
-### Why Median?
-
-Median is more robust to outliers and helps preserve the original distribution of customer behavior.
-
 ---
 
-## Category Standardization
+### Step 2: Feature Importance Analysis
 
-Different labels representing the same meaning were standardized.
+Random Forest was used to identify the most influential variables affecting churn.
 
 ```python
-df['PreferredPaymentMode'] = df['PreferredPaymentMode'].replace({
-    'COD':'Cash on Delivery',
-    'CC':'Credit Card'
+rf = RandomForestClassifier(
+    n_estimators=100,
+    random_state=42
+)
+
+rf.fit(X_train_scaled,y_train)
+
+importance_df = pd.DataFrame({
+    'Feature':X_train.columns,
+    'Importance':rf.feature_importances_
 })
 ```
 
 ---
 
-## Feature Encoding
+## 📊 Results
 
-### One-Hot Encoding
+### Top 5 Churn Drivers
+
+| Rank | Feature           |
+| ---- | ----------------- |
+| 1    | Tenure            |
+| 2    | CashbackAmount    |
+| 3    | WarehouseToHome   |
+| 4    | Complain          |
+| 5    | DaySinceLastOrder |
+
+---
+
+## 💡 Key Findings
+
+### Tenure
+
+Most churned customers have very short tenure.
+
+Approximately 80% of churned customers leave within the first five months.
+
+#### Insight
+
+The customer onboarding period is the most critical stage in the customer lifecycle.
+
+#### Recommendation
+
+* Improve onboarding experience
+* Offer welcome campaigns
+* Provide first-purchase incentives
+
+---
+
+### CashbackAmount
+
+Churned customers generally receive lower cashback rewards.
+
+#### Insight
+
+Customers may perceive lower value from the platform when reward benefits are limited.
+
+#### Recommendation
+
+* Introduce tiered cashback programs
+* Strengthen loyalty rewards
+* Provide personalized promotions
+
+---
+
+### WarehouseToHome
+
+Customers located farther from warehouses tend to churn more frequently.
+
+#### Insight
+
+Longer delivery times may reduce customer satisfaction.
+
+#### Recommendation
+
+* Improve logistics operations
+* Offer real-time delivery tracking
+* Optimize shipping experience
+
+---
+
+### Complain
+
+Complaint history is strongly associated with churn.
+
+#### Insight
+
+Negative customer experiences increase churn probability.
+
+#### Recommendation
+
+* Reduce complaint resolution time
+* Build customer recovery programs
+* Monitor complaint rates continuously
+
+---
+
+### DaySinceLastOrder
+
+Churned customers tend to have longer periods of inactivity.
+
+#### Insight
+
+Purchase inactivity is an early warning signal of churn.
+
+#### Recommendation
+
+* Launch re-engagement campaigns
+* Send reminder emails
+* Offer personalized discounts
+
+---
+
+# ❓ Question 2: Can Machine Learning Predict Customer Churn?
+
+## 🎯 Objective
+
+The second objective is to build a machine learning model that can accurately identify customers likely to churn.
+
+This allows the company to proactively launch retention campaigns before customers leave.
+
+---
+
+## 🔍 Analysis Approach
+
+### Step 1: Feature Engineering
+
+Categorical variables were encoded using:
+
+* One-Hot Encoding
+* Label Encoding
 
 ```python
 df_encoded = pd.get_dummies(
@@ -135,25 +184,27 @@ df_encoded = pd.get_dummies(
 )
 ```
 
-### Label Encoding
+---
+
+### Step 2: Split Dataset
 
 ```python
-from sklearn.preprocessing import LabelEncoder
+X = df_encoded.drop('Churn',axis=1)
+y = df_encoded['Churn']
 
-le = LabelEncoder()
-
-df_encoded['Gender'] = le.fit_transform(
-    df_encoded['Gender']
+X_train,X_test,y_train,y_test = train_test_split(
+    X,
+    y,
+    test_size=0.3,
+    random_state=42
 )
 ```
 
 ---
 
-## Feature Scaling
+### Step 3: Standardize Features
 
 ```python
-from sklearn.preprocessing import StandardScaler
-
 scaler = StandardScaler()
 
 X_train_scaled = scaler.fit_transform(X_train)
@@ -162,95 +213,26 @@ X_test_scaled = scaler.transform(X_test)
 
 ---
 
-# 📊 Exploratory Data Analysis
+### Step 4: Compare Models
 
-To identify churn drivers, Random Forest Feature Importance was used.
+Models tested:
 
-## Top 5 Churn Drivers
+* Logistic Regression
+* KNN
+* Gradient Boosting
+* Random Forest
 
-| Rank | Feature           |
-| ---- | ----------------- |
-| 1    | Tenure            |
-| 2    | CashbackAmount    |
-| 3    | WarehouseToHome   |
-| 4    | Complain          |
-| 5    | DaySinceLastOrder |
+Evaluation Metric:
 
-### Feature Importance Code
+### Recall
 
-```python
-rf = RandomForestClassifier(
-    n_estimators=100,
-    random_state=42
-)
-
-rf.fit(X_train_scaled,y_train)
-
-importance_df = pd.DataFrame({
-    'Feature': X_train.columns,
-    'Importance': rf.feature_importances_
-})
-
-importance_df.sort_values(
-    'Importance',
-    ascending=False
-)
-```
+Recall was prioritized because missing a churned customer (False Negative) is more costly than incorrectly targeting a retained customer.
 
 ---
 
-# 💡 Key Business Insights
+## 📊 Results
 
-### Customers With Short Tenure Are More Likely To Churn
-
-Most churned customers left within the first few months.
-
-**Recommendation**
-
-* Welcome rewards
-* First purchase discounts
-* Customer onboarding campaigns
-
----
-
-### Lower Cashback Is Associated With Higher Churn
-
-Customers receiving lower cashback rewards were more likely to leave.
-
-**Recommendation**
-
-* Tiered cashback programs
-* Loyalty rewards
-
----
-
-### Complaint History Strongly Predicts Churn
-
-Customers who submitted complaints showed significantly higher churn probability.
-
-**Recommendation**
-
-* Faster complaint resolution
-* Customer recovery programs
-
----
-
-### Inactive Customers Are At Higher Risk
-
-Customers with longer periods since their last purchase had a much higher churn rate.
-
-**Recommendation**
-
-* Re-engagement campaigns
-* Personalized promotions
-
----
-
-# 🤖 Churn Prediction Modeling
-
-## Model Comparison
-
-Several algorithms were evaluated.
+### Model Comparison
 
 | Model               | Recall |
 | ------------------- | ------ |
@@ -259,17 +241,11 @@ Several algorithms were evaluated.
 | Gradient Boosting   | 0.517  |
 | Random Forest       | 0.698  |
 
-### Why Recall?
-
-Missing a churned customer (False Negative) is more costly than targeting a retained customer.
-
-Therefore Recall was chosen as the primary evaluation metric.
-
 ---
 
-## Final Model
+### Final Model
 
-### Random Forest Classifier
+Random Forest Classifier
 
 ```python
 rf = RandomForestClassifier(
@@ -278,63 +254,67 @@ rf = RandomForestClassifier(
 )
 
 rf.fit(X_train_scaled,y_train)
-
-y_pred = rf.predict(X_test_scaled)
 ```
+
+---
 
 ### Performance
 
-| Metric                       | Score  |
-| ---------------------------- | ------ |
-| Validation Balanced Accuracy | 90.09% |
-| Test Balanced Accuracy       | 88.55% |
+| Metric                 | Score  |
+| ---------------------- | ------ |
+| Test Accuracy          | 93.43% |
+| Test Balanced Accuracy | 84.21% |
 
 ---
 
-## Hyperparameter Tuning
+## 💡 Business Value
+
+The model can be used as an Early Warning System (EWS) to identify customers at high risk of churn.
+
+### Benefits
+
+* Reduce churn rate
+* Improve retention
+* Increase CLV
+* Optimize marketing budget
+
+---
+
+# ❓ Question 3: Can Churned Customers Be Segmented For Personalized Promotions?
+
+## 🎯 Objective
+
+The third objective is to segment churned customers into different groups so that the company can design targeted retention campaigns.
+
+---
+
+## 🔍 Analysis Approach
+
+### Step 1: Select Churned Customers
 
 ```python
-param_grid = {
-    'n_estimators':[50,100,200],
-    'max_depth':[10,20,30],
-    'min_samples_split':[2,5,10],
-    'bootstrap':[True,False]
-}
-
-grid_search = GridSearchCV(
-    RandomForestClassifier(),
-    param_grid,
-    scoring='balanced_accuracy',
-    cv=5
-)
-
-grid_search.fit(
-    X_train_scaled,
-    y_train
-)
+df_churned = df[df['Churn']==1]
 ```
 
 ---
 
-# 👥 Customer Segmentation
+### Step 2: Dimensionality Reduction
 
-Only churned customers were included in the clustering analysis.
-
-## PCA
+PCA was applied before clustering.
 
 ```python
 pca = PCA(
     n_components=0.90
 )
 
-pca_data = pca.fit_transform(
-    scaled_data
+pca_final = pca.fit_transform(
+    df_churned_final
 )
 ```
 
 ---
 
-## K-Means Clustering
+### Step 3: K-Means Clustering
 
 ```python
 kmeans = KMeans(
@@ -343,79 +323,61 @@ kmeans = KMeans(
 )
 
 clusters = kmeans.fit_predict(
-    pca_data
+    pca_df
 )
 ```
 
 ---
 
-## Results
+### Step 4: Hierarchical Clustering
+
+```python
+agg = AgglomerativeClustering(
+    n_clusters=3
+)
+
+clusters = agg.fit_predict(
+    pca_df
+)
+```
+
+---
+
+## 📊 Results
 
 ### K-Means
 
-* No clear elbow point was observed.
+* No clear elbow point observed.
 
 ### Hierarchical Clustering
 
-* Silhouette Score remained low.
+* Silhouette Score = 0.132
 
-### Conclusion
+### Observation
 
-Customer groups were highly overlapping and did not form meaningful clusters.
-
-Additional behavioral features such as browsing activity, campaign engagement, and session frequency may improve segmentation performance.
+Clusters showed significant overlap and weak separation.
 
 ---
 
-# 💡 Business Recommendations
+## 💡 Conclusion
 
-## Short-Term Actions
+The available dataset does not provide sufficient information to create meaningful customer segments.
 
-### Improve Onboarding Experience
+### Possible Reasons
 
-* Welcome rewards
-* Personalized onboarding
-* First-purchase incentives
-
-### Strengthen Loyalty Programs
-
-* Cashback optimization
-* Tiered reward systems
-
-### Improve Complaint Resolution
-
-* Faster support response
-* Customer recovery workflows
-
-### Re-Engage Inactive Customers
-
-* Email campaigns
-* Push notifications
-* Personalized discounts
+* Limited behavioral variables
+* Missing browsing activity
+* Missing campaign engagement data
 
 ---
 
-## Long-Term Actions
+## 🚀 Recommendation
 
-* Build a Churn Early Warning System (EWS)
-* Collect additional behavioral data
-* Monitor model performance regularly
-* Retrain models periodically
+Future models should include:
 
----
+* Website browsing behavior
+* Session frequency
+* Campaign interaction data
+* Customer engagement metrics
 
-# 📌 Key Results
-
-✅ Identified Top 5 Customer Churn Drivers
-
-✅ Built a Random Forest Churn Prediction Model
-
-✅ Achieved 88.55% Balanced Accuracy
-
-✅ Generated Actionable Retention Recommendations
-
-✅ Evaluated Customer Segmentation Feasibility
-
-✅ Completed an End-to-End Machine Learning Workflow
-
----
+These features may improve segmentation quality and support more personalized retention strategies.
