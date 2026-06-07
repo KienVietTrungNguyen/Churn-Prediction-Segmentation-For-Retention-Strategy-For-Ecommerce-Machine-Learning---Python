@@ -1,3 +1,133 @@
+# 🛒 Customer Churn Prediction & Segmentation for Retention Strategy
+
+**Author:** Nguyen Viet Trung Kien
+**Date:** March 2026
+**Tools Used:** Python, Pandas, NumPy, Scikit-Learn, Random Forest, XGBoost, PCA, K-Means, Hierarchical Clustering
+
+---
+
+# 📌 Background & Overview
+
+Customer churn is one of the most critical challenges for e-commerce businesses because retaining existing customers is significantly less expensive than acquiring new ones. A high churn rate not only reduces revenue but also negatively impacts Customer Lifetime Value (CLV), marketing efficiency, and long-term business growth.
+
+To address this issue, businesses need to understand why customers leave, identify customers at risk of churning, and implement proactive retention strategies before customers stop engaging with the platform.
+
+This project focuses on analyzing customer churn behavior, developing a machine learning model to predict churn, and exploring customer segmentation techniques to support data-driven retention campaigns.
+
+---
+
+# 🎯 Project Objectives
+
+The primary objectives of this project are:
+
+✔️ Identify the key behaviors and characteristics of churned customers.
+
+✔️ Discover the most influential factors contributing to customer churn.
+
+✔️ Build a machine learning model capable of predicting customers who are likely to churn.
+
+✔️ Evaluate and compare multiple machine learning algorithms to select the best-performing model.
+
+✔️ Explore customer segmentation techniques to identify potential groups of churned customers.
+
+✔️ Provide actionable business recommendations to improve customer retention and reduce churn.
+
+---
+
+# ❓ Business Questions
+
+This project aims to answer the following business questions:
+
+### Question 1: Customer Churn Analysis
+
+* What are the characteristics of churned customers?
+* Which factors contribute most to customer churn?
+* What actions can the company take to reduce churn?
+
+### Question 2: Churn Prediction
+
+* Can machine learning accurately predict customers who are likely to churn?
+* Which machine learning model performs best for this problem?
+
+### Question 3: Customer Segmentation
+
+* Can churned customers be grouped into meaningful segments?
+* How can segmentation support targeted retention campaigns and personalized promotions?
+
+---
+
+# 👥 Target Audience
+
+This project is designed for:
+
+### Data Analysts & Business Analysts
+
+To understand churn behavior, customer retention drivers, and predictive analytics techniques.
+
+### Marketing & CRM Teams
+
+To design personalized retention campaigns and customer engagement strategies.
+
+### Customer Retention Teams
+
+To proactively identify high-risk customers and reduce churn.
+
+### Business Stakeholders & Decision Makers
+
+To improve customer retention, increase Customer Lifetime Value (CLV), and optimize marketing investment.
+
+---
+
+# 📂 Dataset Description
+
+### Data Source
+
+The dataset was obtained from an e-commerce company's customer database.
+
+### Dataset Summary
+
+| Information       | Description         |
+| ----------------- | ------------------- |
+| Dataset Name      | Customer Churn Data |
+| Number of Rows    | 5,630               |
+| Number of Columns | 20                  |
+| File Format       | XLSX                |
+| Target Variable   | Churn               |
+
+### Dataset Contents
+
+The dataset contains customer-level information including:
+
+* Customer demographics
+* Purchase behavior
+* Cashback and rewards information
+* Customer satisfaction metrics
+* Complaint history
+* Order frequency and recency
+* Mobile application engagement
+
+### Target Variable
+
+| Value | Meaning           |
+| ----- | ----------------- |
+| 1     | Customer Churned  |
+| 0     | Customer Retained |
+
+---
+
+# 🧱 Project Workflow
+
+```text
+1. Data Preprocessing
+2. Exploratory Data Analysis (EDA)
+3. Feature Engineering
+4. Churn Prediction Modeling
+5. Model Evaluation
+6. Feature Importance Analysis
+7. Customer Segmentation
+8. Business Recommendations
+```
+
 # ❓ Question 1: What factors contribute to customer churn?
 
 ## 🎯 Objective
